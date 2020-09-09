@@ -1,0 +1,13 @@
+1. Cuando se genera el archivo obj a partir del archivo “.asm” ¿Qué información nos muestra en consola y qué significa?
+	Significa que el programa se está ensamblando y se asignan los espacios de memoria correspondientes
+2. ¿En qué punto se crea el archivo ejecutable?
+	El archivo ejecutable es creado al momento de lazar el '.obj'
+
+3. ¿Cuál es la interrupción utilizada para imprimir una cadena de caracteres?
+	Para imprimir una cadena se utiliza '09h'
+
+4. ¿Cuál es la interrupción para imprimir solamente un caracter?
+	Para imprimir un caracter se utiliza '02h'
+
+5. ¿Qué registros entran en juego al ejecutar una interrupción de la serie 21h?
+	Entran en juego los registros: A, B, C, D, E y F
