@@ -15,12 +15,5 @@
             3. ¿Cuál es la interrupción utilizada para imprimir una cadena de caracteres?
             4. ¿Cuál es la interrupción para imprimir solamente un caracter?
             5. ¿Qué registros entran en juego al ejecutar una interrupción de la serie 21h?
-#### ● Ejercicio 2
-        Utilizando el archivo asm para el inciso anterior, responder lo siguiente.
-            1. Cuando se genera el archivo obj a partir del archivo “.asm” ¿Qué información nos muestra en consola y qué significa?
-            2. ¿En qué punto se crea el archivo ejecutable?
-            3. ¿Cuál es la interrupción utilizada para imprimir una cadena de caracteres?
-            4. ¿Cuál es la interrupción para imprimir solamente un caracter?
-            5. ¿Qué registros entran en juego al ejecutar una interrupción de la serie 21h?
 #### ● Ejercicio 3            
             Tomando el ejercicio 1, imprimir su primer nombre y primer apellido carácter por carácter con guión que separe letra por letra.
