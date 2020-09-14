@@ -1,4 +1,5 @@
 .model small
+.stack
 .data
  numA db 32h                        ; numA es igual a 2 en sistema decimal
  numB db 33h                        ; numB es igual a 3 en sistema decimal
