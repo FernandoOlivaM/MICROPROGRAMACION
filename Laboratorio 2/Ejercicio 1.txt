@@ -1,0 +1,10 @@
+Ejercicio 1
+Utilizando los archivos “Ejemplo1.asm” y “Ejemplo2.asm” genere el código objeto y el programa ejecutable utilizando el Ensamblador “TASM” y el Enlazador “TLINK”. Conteste las siguientes preguntas:
+	1. Cuando se genera el ejecutable del archivo “Ejemplo2.asm”, ¿cuál es la advertencia que se muestra en pantalla? ¿Por qué muestra esa advertencia?
+		La advertencia se muestra debido a que el ASM no cuenta con ".stack"	
+
+	2. Modificado el programa para que no muestre la advertencia, ¿cuál es el resultado del programa, es decir, por qué se imprime ese carácter y no un 30?
+		Porque se trabaja con hexadecimales, por lo que se muestra el caracter en codigo ascii para dicho valor.
+
+	3. Modifique el código del archivo “Ejemplo2.asm” y utilizando la tabla de códigos ASCII, imprima en pantalla una letra “Z”.
+		Se adiciona 30H a AL para que la letra Z sea impresa.
