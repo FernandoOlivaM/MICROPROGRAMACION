@@ -68,4 +68,23 @@
             6. Antes de iniciar la ejecución por pasos del programa, ¿cuáles son los valores de los registros de propósito general?
             7. El valor del IP, ¿coincide con la dirección de inicio del programa?
             8. Utilice el comando para el rastreo instrucción por instrucción y, por cada línea del código, escriba el contenido de los registros internos del CPU.
-      
+## Proyecto 1 
+### Enunciado:
+      El identificador único universal o identificador único global es un número de 128 bits generado de forma aleatoria, su representación estándar está conformada por dígitos hexadecimales:
+                        82dc1366-6b6b-496a-bae7-a84de82dda34
+      En total tiene 32 caracteres separados por guiones cumpliendo algunas normas. La probabilidad que un UUID se repita es muy cercana a cero.
+#### Parte 1:
+      Existen diferentes técnicas para generar la aleatoriedad, una de ellas está basada en la fecha y hora actual y la mac address del equipo,
+      En este caso deberá utilizar interrupciones para obtener la fecha y hora actual del equipo y generar un timespan a partir de ello y utilizarlo en la generación de un nuevo UUID.
+      Como no se tiene acceso a la mac address del equipo deberá seguir las siguientes reglas:
+            1. El grupo de los cuatro bits más significativos del séptimo byte deberá iniciar siempre con “1”
+            2. El segundo grupo de bits más significativo deberá iniciar con un número aleatorio entre 8,9,A o B en hexadecimal.
+      La aplicación deberá contar con la opción de generar uno o varios UUIDs.
+#### Parte 2:      
+      El generador de UUIDs también deberá contar con un área de validación, la expresión regular utilizada para validar un UUID es la siguiente:
+                        ^[0-9A-F]{8}-[0-9A-F]{4}-[1][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$
+      Así que además de generar UUIDs, el usuario podrá ingresar uno y el programa deberá mostrar si es válido o no.
+### Entregables:
+      1. Código fuente con su documentación interna (85%)
+      2. Descripción en un diagrama de flujo de su solución (10%)
+      3. Manual de usuario (5%)
