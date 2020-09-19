@@ -68,6 +68,17 @@
             6. Antes de iniciar la ejecución por pasos del programa, ¿cuáles son los valores de los registros de propósito general?
             7. El valor del IP, ¿coincide con la dirección de inicio del programa?
             8. Utilice el comando para el rastreo instrucción por instrucción y, por cada línea del código, escriba el contenido de los registros internos del CPU.
+## Laboratorio 3
+      Dada la emergencia del COVID-19, en Guatemala existe un sistema de alertas que ayudan a saber qué actividades y servicios estarán disponibles. Estas alertas son: Roja, Naranja, Amarilla y Verde, donde:
+      Alerta Roja: Cuando el porcentaje de casos positivos vs las pruebas realizadas sea mayor o igual 20%.
+      Alerta Naranja: Cuando el porcentaje de casos positivos vs las pruebas realizadas sea mayor a 15% y menor a 20%
+      Alerta Amarilla: Cuando los casos positivos vs las pruebas realizadas estén entre el 5 y 15%.
+      Alerta verde: cuando los casos positivos estén entre el 0 y 4%
+### Instrucciones:
+      Deberá realizar un programa en lenguaje ensamblador haciendo uso de MUL, DIV y los diferentes tipos de saltos, que indique la alerta correspondiente para un determinado lugar en base a ingresar la cantidad de pruebas realizadas y los resultados positivos de las mismas.
+      Dado lo anterior, el usuario deberá ingresar un número de máximo 3 dígitos indicando las pruebas realizadas y a continuación otro número, también como máximo 3 dígitos indicando las pruebas que han resultado positivas.
+      El programa deberá mostrar como resultado el texto “Alerta: <Alerta obtenida en base al porcentaje calculado>”.
+      
 ## Proyecto 1 
 ### Enunciado:
       El identificador único universal o identificador único global es un número de 128 bits generado de forma aleatoria, su representación estándar está conformada por dígitos hexadecimales:
