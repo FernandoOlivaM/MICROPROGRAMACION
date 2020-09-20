@@ -203,7 +203,7 @@ main:
         
         MOV DL, AL                  ; se imprime el resultado
         MOV AH, 02 
-        INT 21H 01:12 14/09/2020
+        INT 21H 
         
         MOV DL, 10                  ; se imprime un salto de linea
         MOV AH, 02
