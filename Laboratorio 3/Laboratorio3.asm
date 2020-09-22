@@ -77,7 +77,7 @@ main:
         mov ah, 09h                                 
         int 21h  
     
-		MOV AH,01H                                                              ; se lee el primer digito del numero de casos positivos
+	MOV AH,01H                                                              ; se lee el primer digito del numero de casos positivos
         INT 21H
         SUB AX,30H                                                              ; se obtiene el valor real del numero restando 30
         MOV Dl,100                                                              ; se multiplica por 100, ya que el primer digito representa las centenas
@@ -162,11 +162,11 @@ main:
     
     aVerde:    
         XOR AX, AX    
-        mov dx, offset VERDE                                                ; se muestra en pantalla que existe una alerta verde
+        mov dx, offset VERDE                                                	; se muestra en pantalla que existe una alerta verde
         mov ah, 09h                                   
         int 21h    
         MOV AH, 4CH                 
         INT 21H                     
-	MOV AH, 02H
+    MOV AH, 02H
     INT 21H
 END main
