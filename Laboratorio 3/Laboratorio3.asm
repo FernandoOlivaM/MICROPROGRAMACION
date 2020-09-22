@@ -109,29 +109,24 @@ main:
         ; ------------------------------- DEFINICIÓN DEL COCLOR DE LA ALERTA  --------------------------------------   
         
         XOR AX, AX                                                          ; se limpia AX
-        jmp rango1                                                          ; se realiza un salto NO CONDICIONAL a rango1
-        
-    rango1:                                                                 ; rango1 evalua si el porcentaje es mayor o menor a 4
-        XOR AX, AX                                                          ; se limpia AX
         mov al, Porcentaje
-        CMP AL, 4                                                           ; se compara el porcentaje con el numero 4
-        JlE aVerde                                                          ; si es menor o igual a 4 se produce una alerta verde
-        JG rango2                                                           ; si es mayor a 4 se evalua el siguiente rango
+        CMP AL, 4
+        jle aVerde                                                          ; si es menor o igual a 4 se produce una alerta verde
+        cmp al, 4                                    
+        jg rangoAmarillo                                                    ; si es mayor a 4, se evalua el rango de alerta amarilla
 
-    rango2:                                                                 ; rango2 evalua si el porcentaje es mayor o menor a 15
-        XOR AX, AX                                                          ; se limpia AX
-        mov al, Porcentaje
-        CMP AL, 15                                                          ; se compara que el porcentaje con el numero 15
-        JlE aAmarilla                                                       ; si es menor o igual a 15 se produce una alerta amarilla
-        JG rango3                                                           ; si es mayor a 15 se evalua el siguiente rango 
+    rangoAmarillo:
+        cmp al, 15
+        jle aAmarilla                                                        ; si es menor o igual a 15 se produce una alerta amarilla
+        cmp al, 15
+        jg rangoNaranja                                                     ; si es mayor a 15 se evalua el rango naranja
 
-     rango3:                                                                ; rango3 evalua si el porcentaje es mayor o menor a 20
-        XOR AX, AX                                                          ; se limpia AX
-        mov al, Porcentaje
-        CMP AL, 20                                                          ; se compara que el porcentaje con el numero 20
-        Jl aNaranja                                                         ; si es menor a 20 se produce una alerta narnanja
-        JGE aRoja                                                           ; si es mayor o igual a 20 se produce una alerta roja    
-
+    rangoNaranja:  
+        cmp al, 20
+        jl anaranja                                                         ; si es menor que 20 se produce una alterta naranja
+        cmp al, 20
+        jge aRoja                                                           ; si es mayor o igual a 20 se produce una alerta roja
+    
      aRoja:
         XOR AX, AX    
         mov dx, offset ROJA                                                 ; se muestra en pantalla que existe una alerta roja
