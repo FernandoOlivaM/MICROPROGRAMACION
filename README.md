@@ -78,7 +78,13 @@
       Deberá realizar un programa en lenguaje ensamblador haciendo uso de MUL, DIV y los diferentes tipos de saltos, que indique la alerta correspondiente para un determinado lugar en base a ingresar la cantidad de pruebas realizadas y los resultados positivos de las mismas.
       Dado lo anterior, el usuario deberá ingresar un número de máximo 3 dígitos indicando las pruebas realizadas y a continuación otro número, también como máximo 3 dígitos indicando las pruebas que han resultado positivas.
       El programa deberá mostrar como resultado el texto “Alerta: <Alerta obtenida en base al porcentaje calculado>”.
-      
+## Laboratorio 4
+      Para los siguientes ejercicios deberá leer números con 2 dígitos pero imprimir su resultado con la cantidad de dígitos correcta, es decir hasta 4 dígitos.
+            1. Escribir un programa en lenguaje ensamblador que lea dos números desde el teclado, haga su multiplicación haciendo sumas sucesivas, utilizando ciclos.
+            2. Escribir un programa en lenguaje ensamblador que lea dos números desde el teclado y realice su división por medio de restas sucesivas, utilizando saltos.
+            3. Escribir un programa en lenguaje ensamblador que ingresando un número de dos dígitos imprima todos sus factores utilizando saltos.
+            4. Escribir un programa en lenguaje ensamblador que convierta un número de 2 dígitos a su equivalente en binario utilizando ciclos. 
+
 ## Proyecto 1 
 ### Enunciado:
       El identificador único universal o identificador único global es un número de 128 bits generado de forma aleatoria, su representación estándar está conformada por dígitos hexadecimales:
