@@ -7,6 +7,7 @@ validarUUID  db  13,10,'Validar UUID',13,10,'$'                                 
 generarUUID  db  13,10,'Generar UUID',13,10,'$'                                             ; texto para opcion de generar
 opcionNV     db  13,10,'Opcion no valida',13,10,'$'                                         ; texto para opcion de generar    
 random       db  0  
+r            db  0
 .code
     MAIN proc 
         mov   ax,@data
@@ -79,27 +80,43 @@ random       db  0
     ADD AL,CL                                                                               ; Se obtiene el minuto del sistema
     ADD AL,DH                                                                               ; Se otiene el segundo de sistema
     MOV RANDOM, AL
-    MOV AL, RANDOM
-    
-    AAM
-    MOV BX,AX
-    CALL DISP                                                                               ; se llama a DISP para mostrar el random en pantalla
     XOR AX, AX
+    
+    MOV AL, RANDOM                                                                          ; se realiza una division de random entre 10h, para representar el numero en sistema hexadecimal
+    MOV BL, 10h
+    DIV BL  
+    mov RANDOM, 0                                                                           ; se limpia Random
+    mov RANDOM, ah                                                                          ; se almacena el residuo de la division en random
+    xor AX, AX  
+    ;Para imprimir el random se evalua que este sea mayor o menor a 9 (para mostrar la letra correspondiente si es mayor)
+    ;mov al, RANDOM
+    ;cmp al, 9h
+    ;jg sumar                                                                           ; si es mayor que 9 se suma 30H
+    ;
+    ;sumar:
+    ;    add RANDOM, 11h
+        
+    mov dl, RANDOM    
+    cmp dl, 9h
+    JG letra
+    cmp dl, 9h
+    jle numero
+    letra:
+        sub dl, 10
+        add dl, 'A'
+        
+        mov ah, 02h
+        int 21h
+    
+    numero:
+        add dl, 30h
+        mov ah, 02h
+        int 21h
+    
+
+
     RET                                                                                     ; retorno
 
     RND ENDP
-    
-    ;Display 
-    DISP PROC
-    MOV DL,BH                                                                               ; se sabe que se imprimira bx
-    ADD DL,30H                                                                              ; ajuste en ASCII 
-    MOV AH,02H                                                                              ; imprimir
-    INT 21H
-    MOV DL,BL                                                                               ; parte bl
-    ADD DL,30H                                                                              ; ajuste en ASCII 
-    MOV AH,02H                                                                              ; imprimir
-    INT 21H
-    RET                                                                                     ; retorno
-    DISP ENDP                                                                               ; finalizar proceso
     
 END MAIN
