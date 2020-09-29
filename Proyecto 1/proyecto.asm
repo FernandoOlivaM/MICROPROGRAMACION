@@ -1,5 +1,5 @@
 .model small
-.stack 100h
+.stack 
 .data
 menuTxt      db  13,10,'INGRESE EL NUMERO DE OPCION A REALIZAR',13,10                       ; texto para solicitar una opcion en el menu
              db  '1. Generar UUID',13,10,'2. Validar UUID',13,10,'3. Salir',13,10,'> $'       
@@ -7,9 +7,8 @@ validarUUID  db  13,10,'Validar UUID',13,10,'$'                                 
 generarUUID  db  13,10,'Generar UUID',13,10,'$'                                             ; texto para opcion de generar
 opcionNV     db  13,10,'Opcion no valida',13,10,'$'                                         ; texto para opcion de generar    
 random       db  0  
-r            db  0
 .code
-    MAIN proc 
+    MAIN proc near
         mov   ax,@data
         mov   ds,ax
 
@@ -60,7 +59,7 @@ r            db  0
     MAIN endp
     
     ;generar Random a partir de fecha
-    RND PROC
+    RND PROC near
     ; PARA LA OBTENCION DEL NUMERO ALEATORIO SE HACE UNA SUMA CON 
     ; TODOS LOS ELEMENTOS DE LA FECHA Y HORA DEL SISTEMA
     ; OBTENIENDOLOS Y ALMACENANDOLOS EN UNA VARIABLE
@@ -68,53 +67,33 @@ r            db  0
     ; EL RESIDUO Y DEJARLO EN BASE HEXADECIMAL
 
     Mov random, 0                                                                           ; limpieza en random para no sobre escribir datos
-    MOV AH,2AH                                                                              ; Se obtiene la fecha del sistema
-    INT 21H
-    MOV AL,DL                                                                               ; Se obtiene el dia del sistema, esta en DL
-    ADD AL,DH                                                                               ; Se obtiene el mes del sistema, esta en DH
-    ;ADD AL,CH                                                                              ; Se obtiene el anio del sistema
-    
-    MOV AH,2CH                                                                              ; Se obtiene el tiempo del sistema
-    INT 21H
-    ADD AL,CH                                                                               ; Se obtiene la hora del sistema
-    ADD AL,CL                                                                               ; Se obtiene el minuto del sistema
-    ADD AL,DH                                                                               ; Se otiene el segundo de sistema
-    MOV RANDOM, AL
     XOR AX, AX
-    
-    MOV AL, RANDOM                                                                          ; se realiza una division de random entre 10h, para representar el numero en sistema hexadecimal
-    MOV BL, 10h
-    DIV BL  
-    mov RANDOM, 0                                                                           ; se limpia Random
-    mov RANDOM, ah                                                                          ; se almacena el residuo de la division en random
-    xor AX, AX  
-    ;Para imprimir el random se evalua que este sea mayor o menor a 9 (para mostrar la letra correspondiente si es mayor)
-    ;mov al, RANDOM
-    ;cmp al, 9h
-    ;jg sumar                                                                           ; si es mayor que 9 se suma 30H
-    ;
-    ;sumar:
-    ;    add RANDOM, 11h
-        
-    mov dl, RANDOM    
-    cmp dl, 9h
-    JG letra
-    cmp dl, 9h
-    jle numero
+
+    MOV AH, 00h                                                                             ; interrupción para obtener el tiempo del sistema         
+    INT 1AH                                                                                 ; CX:DX contiene el numero de ticks desde la media noche      
+
+    mov  ax, dx
+    xor  dx, dx
+    mov  cx, 10h                                                                            ; se almacena 10h en cx para realizar la división y así obtener un numero entre 0 y F
+    div  cx                                                                                 ; se realiza la división
+    mov random, dl                                                                          ; se almacena el residuo de la division en random
+    xor AX, AX                                                                              ; se limpia AX
+    ;Para imprimir el random se evalua que este sea mayor o menor a 9 (para mostrar la letra correspondiente si es mayor)  
+    cmp RANDOM, 9h                                                                          ; se raliza una comparación del numero random y 9 para determinar si se imprime un digito o la letra      
+    jle numero                                                                              ; si es menor o igual a 9 se hace un salto a numero
+    cmp RANDOM, 9h                                                                          ; se compara nuevamente
+    JG letra                                                                                ; si es mayor a 9 se hace un salto a letra
     letra:
-        sub dl, 10
-        add dl, 'A'
+        sub dl, 10                                                                          ; si se obtiene una letra, se resta 10 para tener solo los valores que no son digitos
+        add dl, 'A'                                                                         ; se adiciona el valor de A
         
-        mov ah, 02h
+        mov ah, 02h                                                                         ; se imprime el caracter correspondiente
         int 21h
     
     numero:
-        add dl, 30h
-        mov ah, 02h
+        add dl, '0'                                                                         ; se adiciona el valor de 0
+        mov ah, 02h                                                                         ; se imprime el caracter correspondiente
         int 21h
-    
-
-
     RET                                                                                     ; retorno
 
     RND ENDP
