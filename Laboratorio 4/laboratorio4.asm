@@ -1,4 +1,4 @@
- .model small 
+.model small 
 .stack
 .data
 menuTxt     db  13,10,13,10,'INGRESE EL NUMERO DE EJERCICIO A REALIZAR',13,10                     ; texto para solicitar una opcion en el menu
@@ -280,29 +280,29 @@ main:
     leernum2 endp
     
     disp proc near
-    cmp bl, 9h											                                                                   ; se compara lo contenido por bl con 9
-    jle unDigito										                                                                  ; si es menor o igual a 9, se hace un salto a unDigito
-    cmp bl, 9h												                                                                  ; se compara lo contenido por bl con 9
-    jg dosDigitos											                                                                ; si es mayor a 9, se hace un salto a dosDigitos
+    cmp bl, 9h                                                                              ; se compara lo contenido por bl con 9
+    jle unDigito                                                                            ; si es menor o igual a 9, se hace un salto a unDigito
+    cmp bl, 9h                                                                              ; se compara lo contenido por bl con 9
+    jg dosDigitos                                                                           ; si es mayor a 9, se hace un salto a dosDigitos
     dosDigitos:
-        inc decenas									                                                              		; se incrementan las decenas
-        sub bl, 10										                                                               	; se resta 10 a bl (una decena)
-        cmp bl, 9h										                                                               	; se compara bl con 9
-        jle unDigito								                                                              		; si es menor o igual a 9 se hace un salto a unDigito
-        cmp bl, 9h											                                                               ; se compara bl con 9
-        jg dosDigitos								                                                              	; si es mayor a 9 se hace un salto a dosDigitos
+        inc decenas                                                                         ; se incrementan las decenas
+        sub bl, 10                                                                          ; se resta 10 a bl (una decena)
+        cmp bl, 9h                                                                          ; se compara bl con 9
+        jle unDigito                                                                        ; si es menor o igual a 9 se hace un salto a unDigito
+        cmp bl, 9h                                                                          ; se compara bl con 9
+        jg dosDigitos                                                                       ; si es mayor a 9 se hace un salto a dosDigitos
     unDigito:
-        mov dl, decenas							                                                              ; se mueven las decenas a dl
-        add dl, 30h									                                                              		; se adiciona 30h para obtener el valor real del numero
-        mov ah,02h									                                                               		; se imprime el numero de decenas
+        mov dl, decenas                                                                     ; se mueven las decenas a dl
+        add dl, 30h                                                                         ; se adiciona 30h para obtener el valor real del numero
+        mov ah,02h                                                                          ; se imprime el numero de decenas
         int 21h
-        xor dx,dx										                                                                	; se limpia dx
-        mov decenas,0									                                                              ; se limpian las decenas
-        mov dl,bl											                                                                ; se mueve a dl lo contenido por bl (unidades)
-        add dl, 30h										                                                              	; se adiciona 30h para obtener el valor real del numero
-        mov ah, 02h										                                                              	; se imprimen las unidades
+        xor dx,dx                                                                           ; se limpia dx
+        mov decenas,0	                                                                     ; se limpian las decenas
+        mov dl,bl                                                                           ; se mueve a dl lo contenido por bl (unidades)
+        add dl, 30h                                                                         ; se adiciona 30h para obtener el valor real del numero
+        mov ah, 02h                                                                         ; se imprimen las unidades
         int 21h   
-    ret                               	                                                     ; se retorna
+    ret                                                                                     ; se retorna
     disp endp
 
     Salir: 
