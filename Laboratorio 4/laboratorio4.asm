@@ -280,29 +280,29 @@ main:
     leernum2 endp
     
     disp proc near
-    cmp bl, 9h
-    jle unDigito
-    cmp bl, 9h
-    jg dosDigitos
+    cmp bl, 9h											                                                                   ; se compara lo contenido por bl con 9
+    jle unDigito										                                                                  ; si es menor o igual a 9, se hace un salto a unDigito
+    cmp bl, 9h												                                                                  ; se compara lo contenido por bl con 9
+    jg dosDigitos											                                                                ; si es mayor a 9, se hace un salto a dosDigitos
     dosDigitos:
-        inc decenas
-        sub bl, 10
-        cmp bl, 9h
-        jle unDigito
-        cmp bl, 9h
-        jg dosDigitos
+        inc decenas									                                                              		; se incrementan las decenas
+        sub bl, 10										                                                               	; se resta 10 a bl (una decena)
+        cmp bl, 9h										                                                               	; se compara bl con 9
+        jle unDigito								                                                              		; si es menor o igual a 9 se hace un salto a unDigito
+        cmp bl, 9h											                                                               ; se compara bl con 9
+        jg dosDigitos								                                                              	; si es mayor a 9 se hace un salto a dosDigitos
     unDigito:
-        mov dl, decenas
-        add dl, 30h
-        mov ah,02h
+        mov dl, decenas							                                                              ; se mueven las decenas a dl
+        add dl, 30h									                                                              		; se adiciona 30h para obtener el valor real del numero
+        mov ah,02h									                                                               		; se imprime el numero de decenas
         int 21h
-        xor dx,dx
-        mov decenas,0
-        mov dl,bl
-        add dl, 30h
-        mov ah, 02h
+        xor dx,dx										                                                                	; se limpia dx
+        mov decenas,0									                                                              ; se limpian las decenas
+        mov dl,bl											                                                                ; se mueve a dl lo contenido por bl (unidades)
+        add dl, 30h										                                                              	; se adiciona 30h para obtener el valor real del numero
+        mov ah, 02h										                                                              	; se imprimen las unidades
         int 21h   
-    ret
+    ret                               	                                                     ; se retorna
     disp endp
 
     Salir: 
