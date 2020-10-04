@@ -1,23 +1,25 @@
 .model small
 .stack 
 .data
-menuTxt      db  13,10,'INGRESE EL NUMERO DE OPCION A REALIZAR',13,10                       ; texto para solicitar una opcion en el menu
-             db  '1. Generar UUID',13,10,'2. Validar UUID',13,10,'3. Salir',13,10,'> $'       
-validarUUID  db  13,10,'Validar UUID',13,10,'$'                                             ; texto para opcion de validar
-generarUUID  db  13,10,'Generar UUID',13,10,'$'                                             ; texto para opcion de generar
-opcionNV     db  13,10,'Opcion no valida',13,10,'$'                                         ; texto para opcion de generar    
-random       db  0  
+menuTxt      db  13,10,13,10,'INGRESE EL NUMERO DE OPCION A REALIZAR',13,10                 ; texto del menu principal
+             db  '1. GENERAR UUID',13,10,'2. VALIDAR UUID',13,10,'3. SALIR',13,10,'> $'       
+validarUUID  db  13,10,'INGRESE EL UUID A VALIDAR',13,10,'> $'                              ; texto para opcion de validar
+generarUUID  db  13,10,'SE GENERO EL UUID:',13,10,'$'                                       ; texto para UUID generado
+opcionNV     db  13,10,'LA OPCION INGRESADA NO ES VALIDA',13,10,'$'                         ; texto para indicar que la opcion del menu no es valida
+uuidNv       db  13,10,'EL UUID INGRESADO NO ES VALIDO',13,10,'$'                           ; texto para indicar que el UUID ingresado no es correcto
+uuidValido   db  13,10,'EL UUDI INGRESADO ES VALIDO',13,10,'$'                              ; texto para indicar que el UUID ingresado es correcto
+ticks        dw  0                                                                          ; variable para almacenar el numero de ticks, sevira para generar el random
+contador     db  0                                                                          ; variable para la longitud del bloque del UUID
 .code
     MAIN proc near
-        mov   ax,@data
-        mov   ds,ax
+        mov     ax,@data                                                                    ; direccion de inicio de segmento de datos
+        mov     ds,ax
 
-    Menu:       
+    Menu:                                                                                   ; menu principal
         lea     dx, menuTxt                                                                 ; se muestra el texto del menu principal
         mov     ah, 09h 
         int     21h     
             
-    leerOpcion:                     
         mov     ah, 1                                                                       ; se lee la opcion del menu
         int     21h        
         
@@ -34,16 +36,17 @@ random       db  0
         jmp     Salir                                                                       ; si la opcion ingresada es tres se saldra del programa
             
     Generar:
-        lea     dx, generarUUID  
+        lea     dx, generarUUID                                                             ; se muestra el texto de la opcion del menu
         mov     ah, 09h 
-        int     21h    
-        call RND                                                                            ; se llama al procedimiento para generar un numero aleatorio
-        jmp     Menu                                                                        ; se retorna al menu principal
-        
+        int     21h  
+        call    genUUID                                                                     ; se llama al procedimiento genUUID
+        jmp     Menu                                                                        ; se hace un salto para volver al menu princiapl
+
     Validar:       
-        lea     dx, validarUUID  
+        lea     dx, validarUUID                                                             ; se muestra el texto de la opcion del menu
         mov     ah, 09h 
-        int     21h    
+        int     21h
+        call    valUUID                                                                     ; se llama al procedimiento valUUID
         jmp     Menu                                                                        ; se retorna al menu principal
         
     OptNoValida:       
@@ -51,51 +54,202 @@ random       db  0
         mov     ah, 09h 
         int     21h    
         jmp     Menu                                                                        ; se retorna al menu principal
-
+    uuidNoValido:
+        lea     dx, uuidNv                                                                  ; se da a conocer que el uuid validado no es correcto
+        mov     ah, 09h
+        int     21h
+        jmp     Menu                                                                        ; se retorna al menu principal
     Salir: 
         mov   ah,4ch                                                                        ; se termina la ejecucion del programa
         int   21h   
         
     MAIN endp
     
-    ;generar Random a partir de fecha
-    RND PROC near
-    ; PARA LA OBTENCION DEL NUMERO ALEATORIO SE HACE UNA SUMA CON 
-    ; TODOS LOS ELEMENTOS DE LA FECHA Y HORA DEL SISTEMA
-    ; OBTENIENDOLOS Y ALMACENANDOLOS EN UNA VARIABLE
-    ; TAMBIEN SE DIVIDE EL NUMERO OBTENIDO ENTRE 16 PARA OBTENER
-    ; EL RESIDUO Y DEJARLO EN BASE HEXADECIMAL
+    ;validar el UUID ingresado
 
-    Mov random, 0                                                                           ; limpieza en random para no sobre escribir datos
-    XOR AX, AX
+    valUUID proc near                                                                       ; procedimiento para validar un uuid ingresado (opcion 2)
+    
+    mov contador, 8                                                                         ; se indica la longitud del primer bloque (8)
+        call    bloque                                                                      ; se llama al procedimiento bloque
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla para iniciar el siguiente bloque
+        mov     ah, 02h
+        int     21h  
+    mov contador, 4                                                                         ; se indica la longitud del segundo bloque (4)
+        call    bloque                                                                      ; se llama al procedimiento bloque
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla para iniciar el siguiente bloque
+        mov     ah, 02h
+        int     21h  
+    mov contador, 3                                                                         ; se fija el contador en 3, ya que el tercer bloque debe iniciar con 1
+        mov     ah, 1                                                                       ; se lee el caracter ingresado
+        int     21h 
+        cmp     al, '1'                                                                     ; se compara el caracter ingresado con 1
+        je      v3                                                                          ; si el caracter es igual a 1 se hace un salto a v3
+        jmp     uuidNoValido                                                                ; de lo contrario, el uuid no es valido
+    v3: 
+        call    bloque                                                                      ; se llama al procedimiento bloque
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla para iniciar el siguiente bloque
+        mov     ah, 02h
+        int     21h  
+    mov contador,3                                                                          ; se fija el contador en 3, ya que el cuarto bloque debe iniciar con 8,9,a,b
+        mov     ah, 1                                                                       ; se lee el caracter ingresado 
+        int     21h 
+        cmp     al, '8'                                                                     ; se compara el caracter ingresado con 8
+        je      v4                                                                          ; si el caracter es 8 se hace un salto a v4
+        jmp     cmp9                                                                        ; de lo contario, se hace un salto a cmp9
+    cmp9:
+        cmp     al, '9'                                                                     ; se compara el caracter ingresado con 9
+        je      v4                                                                          ; si el caracter es 9 se hace un salto a v4
+        jmp     cmpa                                                                        ; de lo contario, se hace un salto a cmpa
+    cmpa:
+        cmp     al, 'a'                                                                     ; se compara el caracter ingresado con a
+        je      v4                                                                          ; si el caracter es a se hace un salto a v4
+        jmp     cmpb                                                                        ; de lo contrario, se hace un salto a cmpb
+    cmpb:
+        cmp     al, 'b'                                                                     ; se compara el caracter ingresado con b
+        je      v4                                                                          ; si el caracter es b se hace un satlo a v4
+        jne     uuidNoValido                                                                ; de lo contario, se salta a uuidNoValido
+    v4:
+        call    bloque                                                                      ; se llama al procedimiento bloque
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla para iniciar el siguiente bloque
+        mov     ah, 02h
+        int     21h 
+    mov contador,12                                                                         ; se fija el contador en 12, ya que es la longitud del quinto bloque
+        call    bloque                                                                      ; se llama al procedimiento bloque
+        lea     dx, uuidValido                                                              ; se muestra que el uuid es valido si llega a esta parte del programa
+        mov     ah, 09h 
+        int     21h     
+    ret                                                                                     ; se retorna
+    valUUID endp                                                                            ; fin del procedimiento
+    
+    rangos proc near                                                                        ; procedimiento para evaluar que un caracter del uuid este dentro del rango permitido
+        mov     ah, 1 
+        int     21h   
 
-    MOV AH, 00h                                                                             ; interrupción para obtener el tiempo del sistema         
-    INT 1AH                                                                                 ; CX:DX contiene el numero de ticks desde la media noche      
+    m0:
+        cmp     al, '0'                                                                     ; se compara el caracter ingresado con 0
+        jge     r1                                                                          ; si es mayor o igual que 0 se salta a r1
+        jmp     nv                                                                          ; de lo contario, el caracter no es valido y se salta a nv
+    nv: 
+        jmp     uuidNoValido                                                                ; se salta a uuidNoValido
+    r1:
+        cmp     al, '9'                                                                     ; se compara el caracter ingresado con 9
+        jg      r2                                                                          ; si es mayor que 9 se salta a r2
+        jmp     vv                                                                          ; de lo contario, el caracter es valido y se salta a vv
+    r2:
+        cmp     al, 'a'                                                                     ; se compara el caracter ingresado con a
+        jge     r3                                                                          ; si es mayor o igual que a se salta a r3
+        jmp     nv                                                                          ; de lo contrario, el caracter no es valido y se salta a nv
+    r3:
+        cmp     al, 'f'                                                                     ; se compara al caracter ingresado con f
+        jg      nv                                                                          ; si es mayor que f se hace un salto a nv, ya que no es valido
+        jmp     vv                                                                          ; de lo contrario, el caracter es valido pues esta en el rango
 
-    mov  ax, dx
-    xor  dx, dx
-    mov  cx, 10h                                                                            ; se almacena 10h en cx para realizar la división y así obtener un numero entre 0 y F
-    div  cx                                                                                 ; se realiza la división
-    mov random, dl                                                                          ; se almacena el residuo de la division en random
-    xor AX, AX                                                                              ; se limpia AX
-    ;Para imprimir el random se evalua que este sea mayor o menor a 9 (para mostrar la letra correspondiente si es mayor)  
-    cmp RANDOM, 9h                                                                          ; se raliza una comparación del numero random y 9 para determinar si se imprime un digito o la letra      
-    jle numero                                                                              ; si es menor o igual a 9 se hace un salto a numero
-    cmp RANDOM, 9h                                                                          ; se compara nuevamente
-    JG letra                                                                                ; si es mayor a 9 se hace un salto a letra
-    letra:
-        sub dl, 10                                                                          ; si se obtiene una letra, se resta 10 para tener solo los valores que no son digitos
-        add dl, 'A'                                                                         ; se adiciona el valor de A
+    vv:                                                                                     ; vv solo se utiliza para hacer un salto que indique que es correcto, este no realiza ninguna operacion
+
+    ret                                                                                     ; se retorna
+    rangos endp                                                                             ; fin del procedimiento
+    
+    bloque proc near                                                                        ; procedimiento para evaluar cada bloque ingresado con su longitud correspondiente
+    valBloque:
+        xor     ax,ax                                                                       ; se limpia ax
+        call    rangos                                                                      ; se hace una llamada al procedimiento fangos
+        dec     contador                                                                    ; se decrementa el contador
+        jnz     valBloque                                                                   ; el contador no es cero se salta a valBloque
+    ret
+    bloque endp
+
+    generateRandom PROC near                                                                ; procedimiento para generar un numero aleatorio
+
+        XOR     AX, AX                                                                      ; se limpia ax
+        MOV     AH, 00h                                                                     ; interrupcion para obtener el tiempo del sistema         
+        INT     1AH                                                                         ; DX contiene el numero de ticks desde la media noche      
+        add     ticks, dx                                                                   ; se añade el numero de tiks en dx a la variable correspondiente
+        xor     dx, dx                                                                      ; se limpia dx
         
-        mov ah, 02h                                                                         ; se imprime el caracter correspondiente
-        int 21h
-    
-    numero:
-        add dl, '0'                                                                         ; se adiciona el valor de 0
-        mov ah, 02h                                                                         ; se imprime el caracter correspondiente
-        int 21h
-    RET                                                                                     ; retorno
+        mov     ax, ticks                                                                   ; se mueve la variable ticks a AX
+        mov     cx, 10h                                                                     ; se almacena 10h en cx para realizar la division y asi obtener un numero entre 0 y F
+        div     cx                                                                          ; se realiza la division  
+        
+        cmp     dl, 10                                                                      ; se raliza una comparacion del reciduo (random generado) de la operacion y 10 para determinar si se imprime un digito o la letra      
+        jl      numero                                                                      ; si es menor que 10 un salto a numero
+        Jmp     letra                                                                       ; de lo contario, se hace un salto a letra
 
-    RND ENDP
-    
-END MAIN
+    letra:
+        add     dl, 39                                                                      ; si se obtiene una letra, se suma 39 para imprimir la letra entre a y f correspondiente
+
+    numero:
+        add     dl, 48                                                                      ; se adiciona 48 para obtener el valor real del numero
+        mov     ah, 02h                                                                     ; se imprime el caracter correspondiente
+        int     21h
+    RET                                                                                     ; se retorna
+    generateRandom ENDP                                                                     ; fin del procedimiento
+
+    delay proc                                                                              ; procedmiento para realizar pausas (esto evita que todos los elementos del uuid generado sean iguales)
+        mov     bp, 1080                                                                    ; se mueve 1080 al base pointer
+        mov     si, 1080                                                                    ; se mueve 1080 a si
+    delaycmp:
+        dec     bp                                                                          ; se decrementa bp
+        nop
+        jnz     delaycmp                                                                    ; si no es cero se salta a delaycmp
+        dec     si                                                                          ; se decrementa si
+        cmp     si, 0                                                                       ; se compara si con 0    
+        jnz     delaycmp                                                                    ; si no es cero se salta a delaycmp
+        ret                                                                                 ; se retorna
+    delay endp                                                                              ; fin del procedimiento
+
+    genUUID proc near                                                                       ; procedimiento para generar un UUID
+    mov contador, 8                                                                         ; se fija el contador en 8, ya que es la longitud del primer bloque
+    b1:
+        call    generateRandom                                                              ; se llama al procedimiento para generar un numero aleatorio
+        call    delay                                                                       ; se llama al procedimiento delay para producir una pausa
+        dec     contador                                                                    ; se decrementa el contador
+        jnz     b1                                                                          ; si el contador no es cero se hace un salto a b1
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla
+        mov     ah, 02h
+        int     21h   
+        xor     dx,dx                                                                       ; se limpia dx
+    mov contador, 4                                                                         ; se fija el contador en 4, ya que es la longitud del segundo bloque
+    b2:
+        call    generateRandom                                                              ; se llama al procedimiento para generar un numero aleatorio
+        call    delay                                                                       ; se llama al procedimiento delay para producir una pausa
+        dec     contador                                                                    ; se decrementa el contador
+        jnz     b2                                                                          ; si el contador no es cero se hace un salto a b2
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla
+        mov     ah, 02h
+        int     21h 
+        xor     dx,dx                                                                       ; se limpia dx
+    mov contador, 3                                                                         ; se fija el contador en 3, ya que el primer bloque debe iniciar con 1
+        mov     dl, '1'                                                                     ; se imprime un 1
+        mov     ah, 02h
+        int     21h  
+    b3:
+        call    generateRandom                                                              ; se llama al procedimiento para generar un numero aleatorio
+        call    delay                                                                       ; se llama al procedimiento delay para producir una pauta
+        dec     contador                                                                    ; se decrementa el contador
+        jnz     b3                                                                          ; si el contador no es cero se hace un salto a b3
+        mov     dl, '-'                                                                     ; se imprime un guion en pantalla
+        mov     ah, 02h
+        int     21h 
+        xor     dx,dx                                                                       ; se limpia dx
+    mov contador, 3                                                                         ; se fija el contador en 3, ya que el primer bloque debe iniciar con 8,9,a,b
+        mov     dl, 'a'                                                                     ; se imprime una a
+        mov     ah, 02h
+        int     21h   
+    b4:
+        call    generateRandom                                                              ; se llama al procedimiento para generar un numero aleatorio
+        call    delay                                                                       ; se llama el procedimiento delay para producir una pausa
+        dec     contador                                                                    ; se decrementa el contador
+        jnz     b4                                                                          ; si el contador no es cero se hace un salto a b4
+        mov     dl, '-'                                                                     ; se imprime un guion en pantala
+        mov     ah, 02h
+        int     21h   
+        xor     dx,dx                                                                       ; se limpia dx
+    mov contador, 12                                                                        ; se fija el contador en 12, ya que es la longitud del quinto bloque
+    b5:
+        call generateRandom                                                                 ; se llama al procedimiento para generar un numero aleatorio
+        call delay                                                                          ; se llama el procedimiento delay para producir una pausa
+        dec contador                                                                        ; se decrementa el contador
+        jnz b5                                                                              ; si el contador no es cero se salta a b5
+    ret                                                                                     ; se retorna
+    genUUID endp                                                                            ; fin del procedimiento
+END MAIN                                                                                    ; fin del programa
