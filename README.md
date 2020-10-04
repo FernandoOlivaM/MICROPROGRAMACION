@@ -84,6 +84,8 @@
             2. Escribir un programa en lenguaje ensamblador que lea dos números desde el teclado y realice su división por medio de restas sucesivas, utilizando saltos.
             3. Escribir un programa en lenguaje ensamblador que ingresando un número de dos dígitos imprima todos sus factores utilizando saltos.
             4. Escribir un programa en lenguaje ensamblador que convierta un número de 2 dígitos a su equivalente en binario utilizando ciclos. 
+## Laboratorio 5
+      Crear un programa, utilizando procedimientos y cadenas realice el cálculo del factorial de un número, el número mayor que puede ser ingresado es 128!
 
 ## Proyecto 1 
 ### Enunciado:
