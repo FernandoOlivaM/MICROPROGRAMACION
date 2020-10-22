@@ -4,12 +4,14 @@
 menuTxt      db  13,10,13,10,'INGRESE EL NUMERO DE OPCION A REALIZAR',13,10                 ; texto del menu principal
              db  '1. GENERAR UUID',13,10,'2. VALIDAR UUID',13,10,'3. SALIR',13,10,'> $'       
 validarUUID  db  13,10,'INGRESE EL UUID A VALIDAR',13,10,'> $'                              ; texto para opcion de validar
+variosUUID   db  13,10,'INGRESE EL NUMERO DE UUID QUE DESEA GENERAR',13,10,'> $'            ; texto para numero de uuid a generar
 generarUUID  db  13,10,'SE GENERO EL UUID:',13,10,'$'                                       ; texto para UUID generado
 opcionNV     db  13,10,'LA OPCION INGRESADA NO ES VALIDA',13,10,'$'                         ; texto para indicar que la opcion del menu no es valida
 uuidNv       db  13,10,'EL UUID INGRESADO NO ES VALIDO',13,10,'$'                           ; texto para indicar que el UUID ingresado no es correcto
 uuidValido   db  13,10,'EL UUDI INGRESADO ES VALIDO',13,10,'$'                              ; texto para indicar que el UUID ingresado es correcto
 ticks        dw  0                                                                          ; variable para almacenar el numero de ticks, sevira para generar el random
 contador     db  0                                                                          ; variable para la longitud del bloque del UUID
+contadorGen  db  0                                                                          ; variable para el numero de uuid a generar
 .code
     MAIN proc near
         mov     ax,@data                                                                    ; direccion de inicio de segmento de datos
@@ -36,10 +38,28 @@ contador     db  0                                                              
         jmp     Salir                                                                       ; si la opcion ingresada es tres se saldra del programa
             
     Generar:
-        lea     dx, generarUUID                                                             ; se muestra el texto de la opcion del menu
+        lea     dx, variosUUID                                                              ; se pide el numero de uuid a generar
         mov     ah, 09h 
-        int     21h  
-        call    genUUID                                                                     ; se llama al procedimiento genUUID
+        int     21h 
+        
+        mov     ah, 1                                                                       ; se lee el numero de uuid que se desea generar
+        int     21h
+        sub     al, 30H                                                                     ; se obtiene el valor real del numero
+        mov     contadorGen, al                                                             ; se almacena el numero de uuid a generar
+        mov     dl, 13                                                                      ; se imprime un salto de linea
+        mov     ah, 02h
+        int     21h 
+        mov     dl, 10                                                                     
+        mov     ah, 02h
+        int     21h 
+        
+        varios:
+            lea     dx, generarUUID                                                         ; se muestra el texto de la opcion del menu
+            mov     ah, 09h 
+            int     21h  
+            call    genUUID                                                                 ; se llama al procedimiento para generar un uuid
+            dec     contadorGen                                                             ; se decrementa el contador
+            jnz     varios                                                                  ; se salta para generar otro uuid
         jmp     Menu                                                                        ; se hace un salto para volver al menu princiapl
 
     Validar:       
