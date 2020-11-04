@@ -115,3 +115,25 @@
       Posteriormente deberá imprimir 2 cadenas separadas por un salto de línea de la siguiente forma:
             “Hola <Nombre> su carnet es <Carné>”.
             “Bienvenido a la carrera de <Carrera ingresada>
+
+### Laboratorio 8
+#### MASM: Operaciones básicasy Macros
+      Instrucciones generales: Paralos primeros 2 enunciados deberá utilizar Macros, para el ejercicio 3 deberá utilizar procedimientos. Para las operaciones matemáticas por simplicidad podrá utilizar entre 1 o 2 dígitos.
+#### Ejercicio 1
+      Escriba un programa en lenguaje ensamblador que calcule el área y el perímetro de las siguientes figuras geométricas:
+            1.Cuadrado
+            2.Rectángulo
+            3.Triángulo
+      Deberá contar con un menú para solicitar la información respectivamente. 
+#### Ejercicio 2
+      Deberá solicitar al usuario los valores para  a, b y deberá determinar el valor de las siguientes expresiones: 
+      1. 2 * b + 3 * (a-c) 
+      2. a/b 
+      3. a * b /c 
+      4. a * (b/c) 
+#### Ejercicio 3
+      Escriba un programa en lenguaje ensamblador que ingrese dos cadenas y cuente cuantas veces esta la cadena dentro de la otra cadena que se ingresó.
+      Ejemplo:
+            Cadena1: la
+            Cadena2: la cadena dentro de la otra cadena la.
+            Resultado: 3
