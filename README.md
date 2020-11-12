@@ -137,3 +137,14 @@
             Cadena1: la
             Cadena2: la cadena dentro de la otra cadena la.
             Resultado: 3
+### Laboratorio 9
+#### Problema 1
+      Deberá crear un problema en Macro assembler que imprima una matriz de N*M posiciones:
+            1. Solicitar al usuario la cantidad de filas y columnas
+            2. Mostrar al usuario el tamaño de la matriz
+            3. La matriz debe llenarse con un contador que empiece en 0, desde 0 hasta el tamaño de la matriz -1.
+            4. El máximo de dígitos para imprimir en la matriz es de 2 dígitos.
+#### Problema 2
+      Crear un segundo programa basado en el anterior que cumpla con lo siguiente:
+            1. En vez de llenar la matriz con un contador, la llene en base a números y letras ingresados por el usuario. (debe llenar fila a fila)
+            2. Una vez se llene la matriz, deberá ordenarla y volver a imprimirla.
